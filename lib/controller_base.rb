@@ -9,7 +9,7 @@ require_relative './session'
 require_relative './flash'
 
 class ControllerBase
-  attr_reader :req, :res, :params, :form_authenticity_token
+  attr_reader :req, :res, :params
 
   # Setup the controller
   def initialize(req, res, params = {})
@@ -24,7 +24,6 @@ class ControllerBase
     @@protect_from_forgery = true
   end
 
-  # Helper method to alias @already_built_response
   def already_built_response?
     @already_built_response
   end
