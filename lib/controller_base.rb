@@ -2,11 +2,10 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'active_support/inflector'
 require 'erb'
-require 'byebug'
 require 'SecureRandom'
 require 'json'
-require_relative './session'
-require_relative './flash'
+require_relative './initializers/session'
+require_relative './initializers/flash'
 
 class ControllerBase
   attr_reader :req, :res, :params
@@ -32,13 +31,13 @@ class ControllerBase
   def redirect_to(url)
     if already_built_response? && @already_built_response.status == @res.status &&
         @already_built_response.header["location"] == @res.header["location"]
-      raise "DOUBLE RENDER"
+      raise "Cannot redirect twice"
     end
 
     @res.header["location"] = url
     @res.status = 302
-    @session.store_session(@res)
-    @flash.store_flash(@res)
+    session.store_session(@res)
+    flash.store_flash(@res)
     @already_built_response = @res
   end
 
@@ -48,12 +47,12 @@ class ControllerBase
   def render_content(content, content_type)
     if already_built_response? && @already_built_response.body  == @res.body &&
         @already_built_response.header["Content-Type"] == @res.header["Content-Type"]
-      raise "DOUBLE RENDER"
+      raise "Cannot render content twice."
     end
     @res.header["Content-Type"] = content_type
     @res.body = [content]
-    @session.store_session(@res)
-    @flash.store_flash(@res)
+    session.store_session(@res)
+    flash.store_flash(@res)
     @already_built_response = @res
   end
 
@@ -72,11 +71,11 @@ class ControllerBase
   end
 
   def session
-    @session ||= Session.new(req)
+    @session ||= CrosstieInit::Session.new(req)
   end
 
   def flash
-    @flash ||= Flash.new(req)
+    @flash ||= CrosstieInit::Flash.new(req)
   end
 
   # use this with the router to call action_name (:index, :show, :create...)
