@@ -15,7 +15,7 @@ Module CrosstieInit
     end
 
     # evaluate the proc in the context of the instance
-    # for syntactic sugar :)
+    # for syntactic sugar
     def draw(&proc)
       instance_eval(&proc)
     end

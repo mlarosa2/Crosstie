@@ -8,7 +8,9 @@ as found in Ruby on Rails, such as CSRF protection and static asset serving.
 1. Clone the Crosstie repository and cd into it.
 2. Run bundle install
 3. Start the server by running ruby bin/server.rb
-4. Follow along with the examples to add Models, Views, and Controllers!
+4. You can view available routes in bin/server.rb or make your own!
+5. To view the results of already created routes, checkout http://localhost:3000/dogs to view the dogs index, or check out http://localhost:3000/dogs/new to create a new dog!  
+6. Follow along with the examples of features below to add your own Models, Views, and Controllers!
 
 ##Features
 
