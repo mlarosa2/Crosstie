@@ -22,14 +22,14 @@ class Dog
     unless @name.present?
       errors << "Name can't be blank"
     end
-    
-    errors ? false : true
+
+    errors.empty? ? true : false
   end
 
   def save
     return false unless valid?
-
     Dog.all << self
+
     true
   end
 end

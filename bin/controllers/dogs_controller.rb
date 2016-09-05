@@ -1,10 +1,12 @@
+require_relative '../../lib/controller_base'
 require_relative '../models/dog'
 
 class DogsController < ControllerBase
-  def create
-    DogsController.protect_from_forgery # Turns on CSRF protection
+  protect_from_forgery # Turns on CSRF protection
 
+  def create
     @dog = Dog.new(params["dog"])
+
     if @dog.save
       flash[:notice] = "Saved dog successfully"
       redirect_to "/dogs"
