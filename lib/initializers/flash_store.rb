@@ -1,4 +1,4 @@
-Module CrosstieInit
+module CrosstieInit
   class FlashStore
     def initialize(store = {})
       @store = store

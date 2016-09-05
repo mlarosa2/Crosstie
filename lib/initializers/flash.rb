@@ -1,7 +1,7 @@
 require 'json'
 require_relative './flash_store'
 
-Module CrosstieInit
+module CrosstieInit
   class Flash
     attr_reader :now
 

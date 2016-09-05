@@ -1,7 +1,7 @@
 require 'rack'
-require_relative '../lib/initializers/router'
 require_relative '../lib/initializers/show_exceptions'
 require_relative '../lib/initializers/static'
+require_relative '../lib/initializers/router'
 
 require_relative '../lib/controller_base'
 
@@ -20,7 +20,7 @@ post Regexp.new("^/dogs$"), DogsController, :create
 end
 
 app = Rack::Builder.app do
-  use CrosstieInit::Static
+  use Static
   use CrosstieInit::ShowExceptions
   run lambda { |env|
     req = Rack::Request.new(env)

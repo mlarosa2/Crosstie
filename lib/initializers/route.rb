@@ -1,4 +1,4 @@
-Module CrosstieInit
+module CrosstieInit
   class Route
     attr_reader :pattern, :http_method, :controller_class, :action_name
 
@@ -22,8 +22,8 @@ Module CrosstieInit
       match_data.names.each do |name|
         route_params[name] = match_data[name]
       end
-      route_params.merge(req.params)
-      controller = @controller_class.new(req, res, route_params)
+      req.params.merge(route_params)
+      controller = @controller_class.new(req, res, req.params)
       controller.invoke_action(@action_name)
     end
   end

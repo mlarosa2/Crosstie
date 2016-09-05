@@ -1,6 +1,6 @@
 require 'erb'
 
-Module CrosstieInit
+module CrosstieInit
   class ShowExceptions
     attr_reader :app
     def initialize(app)

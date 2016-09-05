@@ -1,6 +1,6 @@
 require_relative './route'
 
-Module CrosstieInit
+module CrosstieInit
   class Router
     attr_reader :routes
 

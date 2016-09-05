@@ -11,12 +11,14 @@ class ControllerBase
   attr_reader :req, :res, :params
 
   # Setup the controller
-  def initialize(req, res, params = {})
+  def initialize(req, res, route_params = {})
     @req = req
     @res = res
-    @params = params
+    @params = route_params.merge(req.params)
     @session = session
     @flash = flash
+    @already_built_response = false
+    @@protect_from_forgery ||= false
   end
 
   def self.protect_from_forgery
@@ -29,31 +31,33 @@ class ControllerBase
 
   # Set the response status code and header
   def redirect_to(url)
-    if already_built_response? && @already_built_response.status == @res.status &&
-        @already_built_response.header["location"] == @res.header["location"]
+    if already_built_response?
       raise "Cannot redirect twice"
     end
 
-    @res.header["location"] = url
     @res.status = 302
+    @res["location"] = url
+    @already_built_response = true
     session.store_session(@res)
     flash.store_flash(@res)
-    @already_built_response = @res
+
+    nil
   end
 
   # Populate the response with content.
   # Set the response's content type to the given type.
   # Raise an error if the developer tries to double render.
   def render_content(content, content_type)
-    if already_built_response? && @already_built_response.body  == @res.body &&
-        @already_built_response.header["Content-Type"] == @res.header["Content-Type"]
+    if already_built_response?
       raise "Cannot render content twice."
     end
-    @res.header["Content-Type"] = content_type
     @res.body = [content]
+    @res.header["Content-Type"] = content_type
+    @already_built_response = true
     session.store_session(@res)
     flash.store_flash(@res)
-    @already_built_response = @res
+
+    nil
   end
 
   # use ERB and binding to evaluate templates
@@ -80,25 +84,29 @@ class ControllerBase
 
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
-    self.send(name)
-    if @@protect_from_forgery && !req.get?
+    if @@protect_from_forgery && req.request_method != "GET"
       check_authenticity_token
     end
-    if @already_built_response.nil?
-      render(name)
-    end
+    self.send(name)
+    render(name) unless already_built_response?
   end
 
   def form_authenticity_token
-    @form_authenticity_token ||= JSON.generate({ "authenticity_token" => SecureRandom.urlsafe_base64 })
-    res.set_cookie("authenticity_token", { :path => "/", :value => @form_authenticity_token })
+    @form_authenticity_token ||= generate_authenticity_token
+    res.set_cookie('authenticity_token', value: @form_authenticity_token, path: '/')
     @form_authenticity_token
   end
+
+  private
 
   def check_authenticity_token
     cookie = req.cookies["authenticity_token"]
     unless cookie && cookie == params["authenticity_token"]
       raise "Invalid authenticity token"
     end
+  end
+
+  def generate_authenticity_token
+    SecureRandom.urlsafe_base64(16)
   end
 end
