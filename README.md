@@ -68,8 +68,8 @@ Errors are rendered in browser! No more ugly error pages!
 
 Static assets are served from the lib/public directory. .jpeg, .jpg, .png, .gif,
 .zip, .txt, .css, .js, and .json file extensions are currently supported. Simply add
-lib/public/name-of-file.* to the root url for the file to be served.
+/lib/public/name-of-file.* to the root url for the file to be served.
 
 ###CSRF Protection
 
-Simply add the ControllerName.protect_from_forgery to the first line of your create method in the controller to protect your app from CSRF attacks. See this in action inside of bin/controllers/dogs_controller.rb
+Simply add the ControllerName.protect_from_forgery to the first line of your controller class to protect your app from CSRF attacks. See this in action inside of bin/controllers/dogs_controller.rb
