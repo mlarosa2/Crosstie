@@ -20,8 +20,8 @@ post Regexp.new("^/dogs$"), DogsController, :create
 end
 
 app = Rack::Builder.app do
+  use ShowExceptions
   use Static
-  use CrosstieInit::ShowExceptions
   run lambda { |env|
     req = Rack::Request.new(env)
     res = Rack::Response.new
