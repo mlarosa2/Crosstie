@@ -62,7 +62,7 @@ session['any_key'] = 'any_value' in your controller.
 
 ###Stack Traces
 
-Errors are rendered in browser! No more ugly error pages!
+Errors are rendered in browser with the error message, stack trace, and source code. No more ugly error pages!
 
 ###Static Assets
 

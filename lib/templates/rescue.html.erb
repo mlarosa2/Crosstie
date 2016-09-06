@@ -1,3 +1,18 @@
-<% @exceptions.each do |exception| %>
-  <%= exception %>
+<h1>Error!</h1>
+
+<%= read_error(e) %>
+
+<h3> Stack Trace </h3>
+
+<ul>
+<% get_backtrace(e).each do |stack| %>
+  <li><%= stack %></li>
 <% end %>
+</ul>
+
+<h3>Source</h3>
+<textarea cols="75" rows="20">
+<% show_source(e).each_with_index do |line| %>
+  <%= line[0...-1] %>
+<% end %>
+</textarea>
